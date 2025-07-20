@@ -1,3 +1,30 @@
+# User Routes
+
+## POST /users/register
+
+Registers a new user. Requires `fullname.firstname` (min 3 chars), optional `fullname.lastname`, valid `email`, and `password` (min 6 chars).  
+Returns a JWT token and user details on success.  
+Validation errors or duplicate email return 400.
+
+## POST /users/login
+
+Authenticates a user. Requires valid `email` and `password`.  
+Returns a JWT token and user details on success.  
+Invalid credentials return 401.
+
+## GET /users/profile
+
+Returns the authenticated user's profile.  
+Requires a valid JWT token in the request (via cookie or `Authorization` header).  
+Returns user details on success.  
+Unauthorized requests return 401.
+
+## GET /users/logout
+
+Logs out the user by blacklisting the JWT token.  
+Requires a valid JWT token.  
+Returns a success message on logout.
+
 # User Registration Endpoint
 
 ## POST /users/register
@@ -75,5 +102,107 @@ Example:
   ```json
   {
     "message": "User already exist"
+  }
+  ```
+
+# User Login Endpoint
+
+## POST /users/login
+
+### Description
+Authenticates an existing user using email and password.
+
+### Request Body
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+```
+
+### Responses
+
+#### Success
+- **Status Code**: `200 OK`
+- **Response Body**: JWT token and user details.
+  ```json
+  {
+    "token": "your-auth-token",
+    "user": {
+      "_id": "user-id",
+      "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+      },
+      "email": "john.doe@example.com"
+    }
+  }
+  ```
+
+#### Invalid Credentials
+- **Status Code**: `401 Unauthorized`
+- **Response Body**:
+  ```json
+  {
+    "message": "Invalid email or password"
+  }
+  ```
+
+# Get User Profile Endpoint
+
+## GET /users/profile
+
+### Description
+Returns the authenticated user's profile. Requires JWT token.
+
+### Responses
+
+#### Success
+- **Status Code**: `200 OK`
+- **Response Body**: User details.
+  ```json
+  {
+    "_id": "user-id",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+  }
+  ```
+
+#### Unauthorized
+- **Status Code**: `401 Unauthorized`
+- **Response Body**:
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+# Logout Endpoint
+
+## GET /users/logout
+
+### Description
+Logs out the user by blacklisting the JWT token.
+
+### Responses
+
+#### Success
+- **Status Code**: `200 OK`
+- **Response Body**:
+  ```json
+  {
+    "message": "Logged out"
+  }
+  ```
+
+#### Unauthorized
+- **Status Code**: `401 Unauthorized`
+- **Response Body**:
+  ```json
+  {
+    "message": "Unauthorized"
   }
   ```
