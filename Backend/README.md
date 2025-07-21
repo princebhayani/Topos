@@ -293,3 +293,134 @@ Validation errors or duplicate email return 400.
     "error": "Captain already exists"
   }
   ```
+
+## POST /captains/login
+
+Authenticates a captain. Requires valid `email` and `password`.  
+Returns a JWT token and captain details on success.  
+Invalid credentials return 401.
+
+### Request Body
+
+```json
+{
+  "email": "alice.smith@example.com",
+  "password": "securepass"
+}
+```
+
+### Responses
+
+#### Success
+- **Status Code**: `200 OK`
+- **Response Body**:
+  ```json
+  {
+    "token": "your-auth-token",
+    "captain": {
+      "_id": "captain-id",
+      "fullname": {
+        "firstname": "Alice",
+        "lastname": "Smith"
+      },
+      "email": "alice.smith@example.com",
+      "vehical": {
+        "color": "Red",
+        "plate": "XYZ123",
+        "capacity": 4,
+        "vehicalType": "car"
+      },
+      "status": "inactive"
+    }
+  }
+  ```
+
+#### Invalid Credentials
+- **Status Code**: `401 Unauthorized`
+- **Response Body**:
+  ```json
+  {
+    "message": "Invalid email or password"
+  }
+  ```
+
+## GET /captains/profile
+
+Returns the authenticated captain's profile.  
+Requires a valid JWT token in the request (via cookie or `Authorization` header).  
+Returns captain details on success.  
+Unauthorized requests return 401.
+
+### Example Request
+
+- **Headers**:  
+  `Authorization: Bearer your-auth-token`  
+  or  
+  Cookie: `token=your-auth-token`
+
+### Responses
+
+#### Success
+- **Status Code**: `200 OK`
+- **Response Body**:
+  ```json
+  {
+    "captain": {
+      "_id": "captain-id",
+      "fullname": {
+        "firstname": "Alice",
+        "lastname": "Smith"
+      },
+      "email": "alice.smith@example.com",
+      "vehical": {
+        "color": "Red",
+        "plate": "XYZ123",
+        "capacity": 4,
+        "vehicalType": "car"
+      },
+      "status": "inactive"
+    }
+  }
+  ```
+
+#### Unauthorized
+- **Status Code**: `401 Unauthorized`
+- **Response Body**:
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+## GET /captains/logout
+
+Logs out the captain by blacklisting the JWT token.  
+Requires a valid JWT token.  
+Returns a success message on logout.
+
+### Example Request
+
+- **Headers**:  
+  `Authorization: Bearer your-auth-token`  
+  or  
+  Cookie: `token=your-auth-token`
+
+### Responses
+
+#### Success
+- **Status Code**: `200 OK`
+- **Response Body**:
+  ```json
+  {
+    "message": "Logout successfully"
+  }
+  ```
+
+#### Unauthorized
+- **Status Code**: `401 Unauthorized`
+- **Response Body**:
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
