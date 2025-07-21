@@ -206,3 +206,90 @@ Logs out the user by blacklisting the JWT token.
     "message": "Unauthorized"
   }
   ```
+
+# Captain Routes
+
+## POST /captains/register
+
+Registers a new captain. Requires `fullname.firstname` (min 3 chars), optional `fullname.lastname`, valid `email`, `password` (min 6 chars), and vehicle details (`vehical.color`, `vehical.plate`, `vehical.capacity`, `vehical.vehicalType`).  
+Returns a JWT token and captain details on success.  
+Validation errors or duplicate email return 400.
+
+### Request Body
+
+```json
+{
+  "fullname": {
+    "firstname": "Alice",
+    "lastname": "Smith"
+  },
+  "email": "alice.smith@example.com",
+  "password": "securepass",
+  "vehical": {
+    "color": "Red",
+    "plate": "XYZ123",
+    "capacity": 4,
+    "vehicalType": "car"
+  }
+}
+```
+
+### Responses
+
+#### Success
+- **Status Code**: `201 Created`
+- **Response Body**:
+  ```json
+  {
+    "token": "your-auth-token",
+    "captain": {
+      "_id": "captain-id",
+      "fullname": {
+        "firstname": "Alice",
+        "lastname": "Smith"
+      },
+      "email": "alice.smith@example.com",
+      "vehical": {
+        "color": "Red",
+        "plate": "XYZ123",
+        "capacity": 4,
+        "vehicalType": "car"
+      },
+      "status": "inactive"
+    }
+  }
+  ```
+
+#### Validation Errors
+- **Status Code**: `400 Bad Request`
+- **Response Body**:
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "First name must be at least 3 characters long",
+        "param": "fullname.firstname",
+        "location": "body"
+      },
+      {
+        "msg": "Color must be at least 3 characters long",
+        "param": "vehical.color",
+        "location": "body"
+      },
+      {
+        "msg": "Invalid vehicle type",
+        "param": "vehical.vehicalType",
+        "location": "body"
+      }
+    ]
+  }
+  ```
+
+#### Captain Already Exists
+- **Status Code**: `400 Bad Request`
+- **Response Body**:
+  ```json
+  {
+    "error": "Captain already exists"
+  }
+  ```
