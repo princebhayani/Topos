@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useContext } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import topos from "../assets/Topos.png";
+import axios from 'axios';
+import { UserDataContext } from '../context/UserContext.jsx';
 
 const UserSignup = () => {
   const [email, setEmail] = useState('')
@@ -9,17 +11,29 @@ const UserSignup = () => {
   const [lastName, setLastName] = useState('')
   const [userData, setUserData] = useState({})
 
+  const navigate = useNavigate();
 
-  const submitHandler = (e)=>{
+  const {user, setUser} = useContext(UserDataContext);  
+
+  const submitHandler = async (e)=>{
     e.preventDefault()
-    setUserData({
-      fullName:{
-        firstName:firstName,
-        lastName:lastName
+    const newUser ={
+      fullname:{
+        firstname:firstName,
+        lastname:lastName
       },
       email:email,
       password:password
-    })
+    }
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser);
+
+    if(response.status === 201){
+      const data = response.data;
+      setUser(data.user);
+      localStorage.setItem('token', data.token);
+      navigate('/home');
+    }
 
     setEmail('')
     setFirstName('')
@@ -87,7 +101,7 @@ const UserSignup = () => {
 
             <button
               className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
-            >Login</button>
+            >Create Account</button>
 
           </form>
           <p className='text-center'>Already have a account? <Link to='/login' className='text-blue-600'>Login here</Link></p>
