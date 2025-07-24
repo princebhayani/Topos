@@ -10,7 +10,7 @@ module.exports.registerCaptain = async (req, res, next) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { fullname, email, password, vehical } = req.body;
+    const { fullname, email, password, vehicle } = req.body;
 
     const isCaptainAlreadyExist = await captainModel.findOne({ email });
 
@@ -26,10 +26,10 @@ module.exports.registerCaptain = async (req, res, next) => {
         lastname: fullname.lastname,
         email,
         password: hashedPassword,
-        color: vehical.color,
-        plate: vehical.plate,
-        capacity: vehical.capacity,
-        vehicalType: vehical.vehicalType
+        color: vehicle.color,
+        plate: vehicle.plate,
+        capacity: vehicle.capacity,
+        vehicleType: vehicle.vehicleType
     });
 
     // Wait for the captain to be created and saved
