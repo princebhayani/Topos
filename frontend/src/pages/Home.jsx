@@ -134,7 +134,7 @@ const Home = () => {
             <i className="ri-arrow-down-wide-line"></i>
           </h5>
           <h4 className="text-2xl font-semibold">Find a trip</h4>
-          <form
+          <form className='relative py-3'
             onSubmit={(e) => {
               submitHandler(e);
             }}
@@ -185,7 +185,7 @@ const Home = () => {
         ref={confirmRidePanelRef}
         className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12"
       >
-        ConfirmRide setConfirmRidePanel={setConfirmRidePanel} setVehicleFound={setVehicleFound} />
+        <ConfirmRide setConfirmRidePanel={setConfirmRidePanel} setVehicleFound={setVehicleFound} />
             </div>
             <div ref={vehicleFoundRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12'>
                 <LookingForDriver setVehicleFound={setVehicleFound} />
